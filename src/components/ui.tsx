@@ -30,19 +30,22 @@ export function Button({
   loading?: boolean;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none select-none cursor-pointer";
+    "relative inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none select-none cursor-pointer active:scale-[0.98] rounded-xl";
   const variants: Record<BtnVariant, string> = {
     primary:
-      "bg-gold text-[#171307] hover:bg-goldsoft border border-gold shadow-[0_0_0_1px_rgba(199,165,106,0.15),0_8px_24px_-12px_rgba(199,165,106,0.4)]",
-    ghost: "text-ash hover:text-fog hover:bg-panel border border-transparent",
-    outline: "text-fog border border-line hover:border-gold/60 hover:text-gold bg-panel/40",
-    danger: "text-brick border border-brick/30 hover:bg-brick/10",
-    subtle: "text-gold/90 bg-gold/10 border border-gold/20 hover:bg-gold/15",
+      "bg-gradient-to-r from-[#d8b05c] via-[#f5d996] to-[#c89b42] text-[#06070a] shadow-[0_4px_20px_rgba(243,211,140,0.35)] hover:shadow-[0_4px_28px_rgba(243,211,140,0.55)] hover:brightness-105 border border-white/30 font-bold",
+    ghost: "text-ash hover:text-fog hover:bg-white/[0.06] border border-transparent",
+    outline:
+      "text-fog border border-white/[0.12] hover:border-gold/60 hover:text-gold bg-white/[0.03] hover:bg-gold/[0.06] backdrop-blur-sm shadow-sm",
+    danger:
+      "text-brick border border-brick/30 bg-brick/10 hover:bg-brick/20 shadow-[0_0_15px_rgba(244,63,94,0.15)]",
+    subtle:
+      "text-gold bg-gold/10 border border-gold/25 hover:bg-gold/20 hover:border-gold/40 shadow-sm",
   };
   const sizes = {
-    sm: "text-xs px-3 h-8",
-    md: "text-[13px] px-4 h-9.5",
-    lg: "text-sm px-6 h-11 font-semibold",
+    sm: "text-xs px-3 h-8 gap-1.5",
+    md: "text-[13px] px-4 h-9.5 gap-2",
+    lg: "text-sm px-6 h-11 font-bold gap-2.5",
   };
   return (
     <button className={cn(base, variants[variant], sizes[size], className)} disabled={loading || rest.disabled} {...rest}>
@@ -56,7 +59,15 @@ export function Button({
 
 export function Panel({ className, children }: { className?: string; children: ReactNode }) {
   return (
-    <div className={cn("bg-panel border border-line", className)}>{children}</div>
+    <div
+      className={cn(
+        "relative rounded-2xl border border-white/[0.08] bg-[#0c101a]/85 backdrop-blur-xl shadow-[0_12px_40px_-15px_rgba(0,0,0,0.6)] transition-all duration-300 hover:border-white/[0.14] overflow-hidden",
+        "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent",
+        className
+      )}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -76,13 +87,15 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4 rise">
+    <div className="flex flex-wrap items-end justify-between gap-4 rise pb-2">
       <div>
         <Kicker className="mb-3">{kicker}</Kicker>
-        <h1 className="font-ar text-3xl md:text-4xl font-extrabold tracking-tight text-fog">{title}</h1>
-        {desc && <p className="mt-2 text-[13px] leading-6 text-ash max-w-2xl">{desc}</p>}
+        <h1 className="font-ar text-3xl md:text-4xl font-extrabold tracking-tight text-fog bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+          {title}
+        </h1>
+        {desc && <p className="mt-2 text-[13.5px] leading-6 text-ash max-w-2xl">{desc}</p>}
       </div>
-      {actions && <div className="flex items-center gap-2">{actions}</div>}
+      {actions && <div className="flex items-center gap-2.5">{actions}</div>}
     </div>
   );
 }
@@ -102,15 +115,15 @@ export function Field({
 }) {
   return (
     <label className={cn("block", className)}>
-      <span className="mb-1.5 block text-[11px] font-semibold text-ash">{label}</span>
+      <span className="mb-1.5 block text-[11.5px] font-semibold text-ash">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-[10px] text-dim">{hint}</span>}
+      {hint && <span className="mt-1.5 block text-[10.5px] text-dim">{hint}</span>}
     </label>
   );
 }
 
 const inputCls =
-  "w-full bg-coal border border-line px-3 h-10 text-[13px] text-fog placeholder:text-dim outline-none transition-colors focus:border-gold/60 focus:bg-[#141414]";
+  "w-full rounded-xl bg-[#090d16]/90 border border-white/[0.09] px-3.5 h-10 text-[13px] text-fog placeholder:text-dim outline-none transition-all focus:border-gold/70 focus:ring-2 focus:ring-gold/20 focus:bg-[#0e1422] shadow-inner";
 
 export function Input({ className, ...rest }: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn(inputCls, className)} {...rest} />;
@@ -133,31 +146,64 @@ export function Select({ className, children, ...rest }: SelectHTMLAttributes<HT
 type Tone = "gold" | "green" | "amber" | "red" | "gray";
 
 export function Badge({ tone = "gray", children, className }: { tone?: Tone; children: ReactNode; className?: string }) {
-  const tones: Record<Tone, string> = {
-    gold: "text-gold bg-gold/10 border-gold/25",
-    green: "text-sage bg-sage/10 border-sage/25",
-    amber: "text-amber bg-amber/10 border-amber/25",
-    red: "text-brick bg-brick/10 border-brick/25",
-    gray: "text-ash bg-white/4 border-line",
+  const tones: Record<Tone, { badge: string; dot: string }> = {
+    gold: {
+      badge: "text-gold bg-gold/10 border-gold/30 shadow-[0_0_12px_rgba(243,211,140,0.12)]",
+      dot: "bg-gold shadow-[0_0_6px_#f3d38c]",
+    },
+    green: {
+      badge: "text-sage bg-sage/10 border-sage/30 shadow-[0_0_12px_rgba(52,211,153,0.12)]",
+      dot: "bg-sage shadow-[0_0_6px_#34d399]",
+    },
+    amber: {
+      badge: "text-amber bg-amber/10 border-amber/30 shadow-[0_0_12px_rgba(251,191,36,0.12)]",
+      dot: "bg-amber shadow-[0_0_6px_#fbbf24]",
+    },
+    red: {
+      badge: "text-brick bg-brick/10 border-brick/30 shadow-[0_0_12px_rgba(244,63,94,0.12)]",
+      dot: "bg-brick shadow-[0_0_6px_#f43f5e]",
+    },
+    gray: {
+      badge: "text-ash bg-white/[0.04] border-white/10",
+      dot: "bg-slate-400",
+    },
   };
+
+  const current = tones[tone];
+
   return (
-    <span className={cn("inline-flex items-center gap-1 border px-2 py-0.5 text-[10px] font-semibold", tones[tone], className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10.5px] font-semibold backdrop-blur-md transition-colors",
+        current.badge,
+        className
+      )}
+    >
+      <span className={cn("inline-block h-1.5 w-1.5 rounded-full shrink-0", current.dot)} />
       {children}
     </span>
   );
 }
 
 export function Dot({ color, className }: { color: string; className?: string }) {
-  return <span className={cn("inline-block h-1.5 w-1.5 rounded-full shrink-0", className)} style={{ background: color }} />;
+  return (
+    <span
+      className={cn("inline-block h-2 w-2 rounded-full shrink-0 shadow-sm", className)}
+      style={{ background: color, boxShadow: `0 0 6px ${color}` }}
+    />
+  );
 }
 
 /* -------------------------------- progress -------------------------------- */
 
 export function ProgressBar({ value, className, barClass }: { value: number; className?: string; barClass?: string }) {
   return (
-    <div className={cn("h-1 w-full bg-line overflow-hidden", className)}>
+    <div className={cn("h-1.5 w-full rounded-full bg-white/[0.07] overflow-hidden", className)}>
       <div
-        className={cn("h-full bg-gold transition-all duration-700", barClass)}
+        className={cn(
+          "h-full rounded-full bg-gradient-to-r from-golddeep via-gold to-goldsoft shadow-[0_0_10px_rgba(243,211,140,0.5)] transition-all duration-700",
+          barClass
+        )}
         style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
       />
     </div>
@@ -167,7 +213,7 @@ export function ProgressBar({ value, className, barClass }: { value: number; cla
 export function GoalRing({
   pct,
   size = 168,
-  stroke = 6,
+  stroke = 7,
   children,
 }: {
   pct: number;
@@ -180,12 +226,12 @@ export function GoalRing({
   return (
     <div className="relative inline-grid place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} stroke="#232323" strokeWidth={stroke} fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} fill="none" />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
-          stroke="#c7a56a"
+          stroke="url(#goldGradient)"
           strokeWidth={stroke}
           fill="none"
           strokeLinecap="round"
@@ -193,6 +239,13 @@ export function GoalRing({
           strokeDashoffset={c - (Math.min(100, pct) / 100) * c}
           style={{ transition: "stroke-dashoffset 1s cubic-bezier(0.22,1,0.36,1)" }}
         />
+        <defs>
+          <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#c59b48" />
+            <stop offset="50%" stopColor="#f3d38c" />
+            <stop offset="100%" stopColor="#fae4b5" />
+          </linearGradient>
+        </defs>
       </svg>
       <div className="absolute inset-0 grid place-items-center">{children}</div>
     </div>
@@ -213,11 +266,13 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 border border-dashed border-line py-12 px-6 text-center">
-      <div className="grid h-11 w-11 place-items-center border border-line bg-panel text-gold">{icon}</div>
+    <div className="flex flex-col items-center justify-center gap-3.5 rounded-2xl border border-dashed border-white/10 bg-white/[0.015] py-12 px-6 text-center backdrop-blur-sm">
+      <div className="grid h-12 w-12 place-items-center rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/15 to-gold/5 text-gold shadow-[0_0_20px_rgba(243,211,140,0.15)]">
+        {icon}
+      </div>
       <div className="text-sm font-bold text-fog">{title}</div>
       {hint && <div className="max-w-sm text-xs leading-5 text-ash">{hint}</div>}
-      {action}
+      {action && <div className="mt-2">{action}</div>}
     </div>
   );
 }
@@ -249,20 +304,23 @@ export function Modal({
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 grid place-items-center p-4">
-      <button aria-label="close" className="absolute inset-0 bg-black/70 backdrop-blur-[2px] fadein" onClick={onClose} />
+      <button aria-label="close" className="absolute inset-0 bg-black/80 backdrop-blur-md fadein" onClick={onClose} />
       <div
         className={cn(
-          "relative z-10 max-h-[88vh] w-full overflow-y-auto border border-line2 bg-panel shadow-2xl rise",
+          "relative z-10 max-h-[88vh] w-full overflow-y-auto rounded-2xl border border-white/15 bg-[#0a0d16]/95 backdrop-blur-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] rise",
           wide ? "max-w-3xl" : "max-w-lg"
         )}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-panel px-5 py-3.5">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/[0.08] bg-[#0a0d16]/90 backdrop-blur-xl px-5 py-3.5">
           <div className="font-ar text-sm font-bold text-fog">{title}</div>
-          <button onClick={onClose} className="text-ash transition-colors hover:text-fog cursor-pointer">
+          <button
+            onClick={onClose}
+            className="grid h-7 w-7 place-items-center rounded-lg border border-white/10 text-ash transition-colors hover:text-fog hover:bg-white/[0.06] cursor-pointer"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="p-5">{children}</div>
+        <div className="p-6">{children}</div>
       </div>
     </div>
   );
@@ -282,25 +340,34 @@ export function Tabs({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-1 border-b border-line", className)}>
-      {items.map((it) => (
-        <button
-          key={it.key}
-          onClick={() => onChange(it.key)}
-          className={cn(
-            "relative px-3.5 pb-2.5 pt-1 text-[12.5px] font-semibold transition-colors cursor-pointer",
-            active === it.key ? "text-gold" : "text-ash hover:text-fog"
-          )}
-        >
-          {it.label}
-          {typeof it.count === "number" && (
-            <span className={cn("mr-1.5 fnum text-[10px]", active === it.key ? "text-gold/80" : "text-dim")}>
-              ({it.count})
-            </span>
-          )}
-          {active === it.key && <span className="absolute inset-x-2 -bottom-px h-px bg-gold" />}
-        </button>
-      ))}
+    <div className={cn("inline-flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-white/[0.03] border border-white/[0.06]", className)}>
+      {items.map((it) => {
+        const isCurrent = active === it.key;
+        return (
+          <button
+            key={it.key}
+            onClick={() => onChange(it.key)}
+            className={cn(
+              "relative rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold transition-all cursor-pointer flex items-center gap-1.5",
+              isCurrent
+                ? "bg-gradient-to-r from-gold/15 to-gold/5 text-gold border border-gold/30 shadow-[0_0_12px_rgba(243,211,140,0.15)] font-bold"
+                : "text-ash hover:text-fog hover:bg-white/[0.04]"
+            )}
+          >
+            {it.label}
+            {typeof it.count === "number" && (
+              <span
+                className={cn(
+                  "rounded-full px-1.5 py-0.2 fnum text-[10px] font-bold",
+                  isCurrent ? "bg-gold/20 text-gold" : "bg-white/[0.06] text-dim"
+                )}
+              >
+                {it.count}
+              </span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -368,15 +435,30 @@ export function Stat({
   className?: string;
 }) {
   return (
-    <div className={cn("border border-line bg-panel p-4 transition-colors hover:border-line2", className)}>
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-[10.5px] font-semibold text-ash">{label}</span>
-        {icon && <span className="text-dim">{icon}</span>}
+    <div
+      className={cn(
+        "group relative rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 p-5 backdrop-blur-xl shadow-[0_12px_32px_-15px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-white/[0.16] hover:translate-y-[-2px] overflow-hidden",
+        "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent",
+        className
+      )}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-[11.5px] font-semibold text-ash">{label}</span>
+        {icon && (
+          <div className="grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-gold shadow-sm transition-transform duration-300 group-hover:scale-110">
+            {icon}
+          </div>
+        )}
       </div>
-      <div className="fnum mt-2 text-[22px] font-bold tracking-tight" style={{ color: accent ?? "#f5f5f5" }}>
+      <div className="fnum mt-3 text-[26px] font-extrabold tracking-tight" style={{ color: accent ?? "#f8fafc" }}>
         {value}
       </div>
-      {hint && <div className="mt-1 text-[10.5px] text-dim">{hint}</div>}
+      {hint && (
+        <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-dim">
+          <span className="h-1 w-1 rounded-full bg-slate-500" />
+          <span>{hint}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -385,11 +467,11 @@ export function Stat({
 
 export function ThinkingDots() {
   return (
-    <span className="inline-flex items-center gap-1 py-1">
+    <span className="inline-flex items-center gap-1.5 py-1">
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="h-1.5 w-1.5 rounded-full bg-gold/70 animate-pulse"
+          className="h-2 w-2 rounded-full bg-gradient-to-r from-gold to-goldsoft shadow-[0_0_8px_rgba(243,211,140,0.6)] animate-pulse"
           style={{ animationDelay: `${i * 180}ms` }}
         />
       ))}
