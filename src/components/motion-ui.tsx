@@ -11,6 +11,7 @@ import {
   Map,
   Search,
   Settings,
+  Sparkles,
   Tags,
   Users,
   Wallet,
@@ -25,13 +26,13 @@ import React, {
 } from "react";
 
 /* -------------------------------------------------------------------------- */
-/* 1. SPOTLIGHT CARD (60fps.design cursor-tracking specular glow)              */
+/* 1. SPOTLIGHT CARD (Specular cursor-tracking glow & luxury glass)            */
 /* -------------------------------------------------------------------------- */
 
 export function SpotlightCard({
   children,
   className,
-  glowColor = "rgba(199, 165, 106, 0.14)",
+  glowColor = "rgba(243, 211, 140, 0.16)",
 }: {
   children: ReactNode;
   className?: string;
@@ -59,7 +60,8 @@ export function SpotlightCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "group relative overflow-hidden rounded-sm border border-line bg-panel transition-colors duration-300 hover:border-line2",
+        "group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0c101a]/85 backdrop-blur-xl transition-all duration-300 hover:border-white/[0.18] shadow-[0_12px_40px_-15px_rgba(0,0,0,0.6)]",
+        "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent",
         className
       )}
     >
@@ -69,7 +71,7 @@ export function SpotlightCard({
           background: useTransform(
             [mouseX, mouseY],
             ([x, y]) =>
-              `radial-gradient(450px circle at ${x}px ${y}px, ${glowColor}, transparent 80%)`
+              `radial-gradient(500px circle at ${x}px ${y}px, ${glowColor}, transparent 80%)`
           ),
         }}
       />
@@ -90,7 +92,7 @@ export function BentoGrid({
   className?: string;
 }) {
   return (
-    <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4", className)}>
+    <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5", className)}>
       {children}
     </div>
   );
@@ -145,7 +147,7 @@ export function MorphingTabs({
   className?: string;
 }) {
   return (
-    <div className={cn("inline-flex items-center gap-1 rounded-sm bg-ink/60 p-1 border border-line", className)}>
+    <div className={cn("inline-flex items-center gap-1.5 rounded-xl bg-white/[0.03] p-1 border border-white/[0.06]", className)}>
       {tabs.map((tab) => {
         const isActive = tab.id === activeId;
         return (
@@ -153,21 +155,21 @@ export function MorphingTabs({
             key={tab.id}
             onClick={() => onChange(tab.id)}
             className={cn(
-              "relative px-3.5 py-1.5 text-xs font-medium transition-colors select-none cursor-pointer",
-              isActive ? "text-fog" : "text-ash hover:text-fog"
+              "relative rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all select-none cursor-pointer flex items-center gap-1.5",
+              isActive ? "text-gold font-bold" : "text-ash hover:text-fog hover:bg-white/[0.04]"
             )}
           >
             {isActive && (
               <motion.div
                 layoutId="activeTabPill"
-                className="absolute inset-0 rounded-[2px] bg-panel border border-gold/30 shadow-[0_0_12px_rgba(199,165,106,0.12)]"
+                className="absolute inset-0 rounded-lg bg-gradient-to-r from-gold/15 to-gold/5 border border-gold/30 shadow-[0_0_12px_rgba(243,211,140,0.15)]"
                 transition={{ type: "spring", stiffness: 400, damping: 32 }}
               />
             )}
             <span className="relative z-10 flex items-center gap-1.5">
               {tab.label}
               {tab.badge !== undefined && (
-                <span className="rounded-full bg-gold/15 px-1.5 py-0.2 text-[10px] text-gold font-mono">
+                <span className="rounded-full bg-gold/20 px-1.5 py-0.2 text-[10px] text-gold font-bold fnum">
                   {tab.badge}
                 </span>
               )}
@@ -198,14 +200,14 @@ export function TactileButton({
 }) {
   const variants = {
     primary:
-      "bg-gold text-[#171307] hover:bg-goldsoft border border-gold shadow-[0_0_20px_-5px_rgba(199,165,106,0.4)] font-semibold",
-    ghost: "text-ash hover:text-fog hover:bg-panel border border-transparent",
-    outline: "text-fog border border-line hover:border-gold/60 hover:text-gold bg-panel/40",
+      "bg-gradient-to-r from-[#d8b05c] via-[#f5d996] to-[#c89b42] text-[#06070a] shadow-[0_4px_20px_rgba(243,211,140,0.35)] hover:shadow-[0_4px_28px_rgba(243,211,140,0.55)] border border-white/30 font-bold",
+    ghost: "text-ash hover:text-fog hover:bg-white/[0.06] border border-transparent font-medium",
+    outline: "text-fog border border-white/[0.12] hover:border-gold/60 hover:text-gold bg-white/[0.03] hover:bg-gold/[0.06] backdrop-blur-sm font-medium",
   };
   const sizes = {
-    sm: "text-xs px-3 h-8",
-    md: "text-[13px] px-4 h-9.5",
-    lg: "text-sm px-6 h-11",
+    sm: "text-xs px-3 h-8 gap-1.5",
+    md: "text-[13px] px-4 h-9.5 gap-2",
+    lg: "text-sm px-6 h-11 gap-2.5 font-bold",
   };
 
   return (
@@ -215,7 +217,7 @@ export function TactileButton({
       transition={{ type: "spring", stiffness: 500, damping: 25 }}
       onClick={onClick}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-sm cursor-pointer select-none transition-colors",
+        "inline-flex items-center justify-center rounded-xl cursor-pointer select-none transition-all",
         variants[variant],
         sizes[size],
         className
@@ -266,55 +268,64 @@ export function CommandPalette() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="hidden sm:inline-flex items-center gap-2.5 h-8 px-2.5 text-xs text-ash bg-coal border border-line hover:border-gold/40 hover:text-fog transition-colors rounded-sm cursor-pointer"
+        className="hidden sm:inline-flex items-center gap-2.5 h-9 px-3 text-xs text-slate-300 bg-white/[0.03] border border-white/10 hover:border-gold/40 hover:bg-white/[0.06] transition-all rounded-full cursor-pointer shadow-sm"
       >
-        <Search className="w-3.5 h-3.5 text-dim" />
+        <Search className="w-3.5 h-3.5 text-gold" />
         <span>بحث سريع / تنقل...</span>
-        <kbd className="text-[10px] text-dim bg-panel px-1.5 py-0.5 rounded border border-line font-mono">
+        <kbd className="text-[10px] text-slate-400 bg-white/[0.06] px-1.5 py-0.5 rounded-md border border-white/10 font-mono">
           ⌘K
         </kbd>
       </button>
 
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4 bg-ink/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4 bg-black/80 backdrop-blur-md">
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: -8 }}
+              initial={{ opacity: 0, scale: 0.96, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -8 }}
+              exit={{ opacity: 0, scale: 0.96, y: -10 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
-              className="w-full max-w-xl overflow-hidden rounded-md border border-line bg-panel shadow-[0_16px_48px_rgba(0,0,0,0.8)]"
+              className="w-full max-w-xl overflow-hidden rounded-2xl border border-white/15 bg-[#0a0d16]/95 backdrop-blur-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)]"
             >
               <Command className="bg-transparent text-fog">
-                <div className="flex items-center border-b border-line px-3.5">
-                  <Search className="mr-2 h-4 w-4 shrink-0 text-ash" />
+                <div className="flex items-center border-b border-white/[0.08] px-4 py-1">
+                  <Search className="mr-2.5 h-4 w-4 shrink-0 text-gold" />
                   <Command.Input
                     placeholder="ابحث عن صفحة، عميل، أو أمر..."
-                    className="flex h-11 w-full bg-transparent text-sm placeholder:text-dim outline-none text-fog"
+                    className="flex h-12 w-full bg-transparent text-sm placeholder:text-dim outline-none text-fog"
                   />
                   <kbd
                     onClick={() => setOpen(false)}
-                    className="cursor-pointer text-[10px] text-dim hover:text-fog bg-coal px-1.5 py-0.5 rounded border border-line font-mono"
+                    className="cursor-pointer text-[10.5px] text-dim hover:text-fog bg-white/[0.06] px-2 py-0.5 rounded-md border border-white/10 font-mono"
                   >
                     ESC
                   </kbd>
                 </div>
 
-                <Command.List className="max-h-72 overflow-y-auto p-2">
-                  <Command.Empty className="py-6 text-center text-xs text-dim">
+                <Command.List className="max-h-80 overflow-y-auto p-2.5">
+                  <Command.Empty className="py-8 text-center text-xs text-dim">
                     لم يتم العثور على نتائج.
                   </Command.Empty>
 
-                  <Command.Group heading={<span className="text-[10px] font-mono text-gold px-2">التنقل السريع</span>}>
+                  <Command.Group
+                    heading={
+                      <div className="flex items-center gap-1.5 text-[10.5px] font-mono text-gold px-2.5 py-1.5">
+                        <Sparkles className="h-3 w-3" />
+                        <span>التنقل السريع في النظام</span>
+                      </div>
+                    }
+                  >
                     {navItems.map((item) => (
                       <Command.Item
                         key={item.href}
                         onSelect={() => run(() => router.push(item.href))}
-                        className="flex items-center justify-between gap-2 px-2.5 py-2 text-xs rounded-sm cursor-pointer text-fog hover:bg-gold/10 hover:text-gold transition-colors aria-selected:bg-gold/15 aria-selected:text-gold"
+                        className="flex items-center justify-between gap-2 px-3 py-2.5 text-xs rounded-xl cursor-pointer text-fog hover:bg-gold/10 hover:text-gold transition-colors aria-selected:bg-gold/15 aria-selected:text-gold"
                       >
-                        <div className="flex items-center gap-2.5">
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.label}</span>
+                        <div className="flex items-center gap-3">
+                          <div className="grid h-7 w-7 place-items-center rounded-lg border border-white/10 bg-white/[0.03]">
+                            <item.icon className="h-3.5 w-3.5" />
+                          </div>
+                          <span className="font-semibold">{item.label}</span>
                         </div>
                         <span className="text-[10px] font-mono text-dim">{item.en}</span>
                       </Command.Item>
@@ -331,7 +342,7 @@ export function CommandPalette() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 7. FLOATING EXECUTIVE POD (Subtle Glass Action Dock)                        */
+/* 7. FLOATING EXECUTIVE POD (Glass Action Dock)                               */
 /* -------------------------------------------------------------------------- */
 
 export function FloatingActionPod({
@@ -341,24 +352,32 @@ export function FloatingActionPod({
   primaryActionLabel?: string;
   onPrimaryAction?: () => void;
 }) {
+  const router = useRouter();
   return (
     <motion.div
       initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 350, damping: 28 }}
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden md:flex items-center gap-3 px-4 py-2 rounded-full border border-line/80 bg-coal/85 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden md:flex items-center gap-3.5 px-4 py-2 rounded-full border border-white/15 bg-[#0a0d16]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
     >
-      <div className="flex items-center gap-2 text-xs text-ash border-r border-line pr-3">
+      <div className="flex items-center gap-2.5 text-xs text-ash border-e border-white/10 pe-3.5">
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sage opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-sage" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
         </span>
-        <span className="font-mono text-[11px] text-fog">ACTIVE SESSION</span>
+        <span className="font-mono text-[10.5px] font-bold text-fog tracking-wider">ONLINE</span>
       </div>
 
       <CommandPalette />
 
-      <TactileButton size="sm" variant="primary" onClick={onPrimaryAction}>
+      <TactileButton
+        size="sm"
+        variant="primary"
+        onClick={() => {
+          if (onPrimaryAction) onPrimaryAction();
+          else router.push("/mission");
+        }}
+      >
         <Crosshair className="w-3.5 h-3.5" />
         <span>{primaryActionLabel}</span>
       </TactileButton>
