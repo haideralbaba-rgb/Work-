@@ -4,6 +4,7 @@ import type { Notification } from "@/db/schema";
 import { markNotificationsRead } from "@/actions/strategist";
 import { signOut } from "@/actions/auth";
 import { cn, timeAgoAr } from "@/lib/utils";
+import { CommandPalette, FloatingActionPod } from "@/components/motion-ui";
 import {
   BarChart3,
   Bell,
@@ -249,7 +250,8 @@ export default function Shell({
             <div className="fnum text-[8.5px] font-bold tracking-[0.3em] text-gold/80">{current?.en ?? "INDEPENDENT OS"}</div>
             <div className="truncate text-[13px] font-bold text-fog">{current?.ar ?? "مركز القيادة"}</div>
           </div>
-          <div className="ms-auto flex items-center gap-2">
+          <div className="ms-auto flex items-center gap-3">
+            <CommandPalette />
             {bell}
             <div className="hidden items-center gap-2 border border-line bg-panel px-3 py-1.5 sm:flex">
               <span className="grid h-6 w-6 place-items-center bg-gold/15 text-[10px] font-black text-gold">
@@ -260,7 +262,11 @@ export default function Shell({
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 pb-24 pt-6 md:px-7 md:pt-8 lg:pb-10">{children}</main>
+        <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 pb-24 pt-6 md:px-7 md:pt-8 lg:pb-10">
+          {children}
+        </main>
+
+        <FloatingActionPod onPrimaryAction={() => router.push("/mission")} />
 
         {/* mobile bottom nav */}
         <nav className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t border-line bg-coal/95 px-2 py-2 backdrop-blur lg:hidden">
