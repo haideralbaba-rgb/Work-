@@ -18,6 +18,7 @@ import {
   PanelRightClose,
   PanelRightOpen,
   Settings,
+  Sparkles,
   Tags,
   Users,
   Wallet,
@@ -44,14 +45,20 @@ const MOBILE_MAIN = ["/dashboard", "/mission", "/clients", "/studio", "/revenue"
 
 function Wordmark({ collapsed }: { collapsed: boolean }) {
   return (
-    <div className={cn("flex items-center gap-2.5", collapsed && "justify-center")}>
-      <div className="grid h-8 w-8 shrink-0 place-items-center border border-gold/50 bg-gold/10">
+    <div className={cn("flex items-center gap-3", collapsed && "justify-center")}>
+      <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-gold/40 bg-gradient-to-br from-gold/20 via-gold/10 to-transparent shadow-[0_0_20px_rgba(243,211,140,0.25)]">
         <span className="fnum text-[13px] font-black text-gold">IO</span>
+        <span className="absolute -top-1 -end-1 h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
       </div>
       {!collapsed && (
-        <div className="leading-none">
-          <div className="fnum text-[13px] font-extrabold tracking-[0.18em] text-fog">INDEPENDENT</div>
-          <div className="fnum mt-1 text-[9px] font-semibold tracking-[0.42em] text-gold">OS</div>
+        <div className="leading-tight">
+          <div className="fnum text-[13px] font-black tracking-[0.16em] text-fog bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            INDEPENDENT
+          </div>
+          <div className="fnum text-[9.5px] font-extrabold tracking-[0.38em] text-gold flex items-center gap-1">
+            <span>OS</span>
+            <span className="text-[8px] text-dim tracking-normal font-medium">v2.0</span>
+          </div>
         </div>
       )}
     </div>
@@ -93,7 +100,7 @@ export default function Shell({
   const unread = notifications.filter((x) => !x.read).length;
 
   const navList = (mini: boolean) => (
-    <nav className="flex flex-col gap-0.5 px-2">
+    <nav className="flex flex-col gap-1 px-2.5">
       {NAV.map((item) => {
         const active = pathname.startsWith(item.href);
         const Icon = item.icon;
@@ -103,16 +110,25 @@ export default function Shell({
             href={item.href}
             onClick={() => setMobileOpen(false)}
             className={cn(
-              "group relative flex items-center gap-3 px-3 py-2.5 text-[13px] transition-all duration-200",
-              active ? "bg-panel text-gold" : "text-ash hover:bg-panel/60 hover:text-fog",
-              mini && "justify-center px-0"
+              "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] transition-all duration-200",
+              active
+                ? "bg-gradient-to-r from-gold/15 via-gold/5 to-transparent text-gold border border-gold/30 shadow-[0_0_15px_rgba(243,211,140,0.12)] font-bold"
+                : "text-slate-400 hover:bg-white/[0.04] hover:text-white border border-transparent",
+              mini && "justify-center px-0 h-10 w-10 mx-auto"
             )}
             title={mini ? item.ar : undefined}
           >
-            {active && <span className="absolute start-0 top-1.5 bottom-1.5 w-[2px] bg-gold" />}
-            <Icon className={cn("h-[17px] w-[17px] shrink-0", active ? "text-gold" : "text-dim group-hover:text-ash")} />
+            {active && (
+              <span className="absolute start-0 top-2 bottom-2 w-1 rounded-r-full bg-gold shadow-[0_0_8px_#f3d38c]" />
+            )}
+            <Icon
+              className={cn(
+                "h-[18px] w-[18px] shrink-0 transition-transform duration-200 group-hover:scale-110",
+                active ? "text-gold" : "text-slate-400 group-hover:text-slate-200"
+              )}
+            />
             {!mini && (
-              <span className="flex-1 truncate font-semibold">{item.ar}</span>
+              <span className="flex-1 truncate">{item.ar}</span>
             )}
           </Link>
         );
@@ -124,23 +140,26 @@ export default function Shell({
     <div className="relative">
       <button
         onClick={() => setBellOpen((v) => !v)}
-        className="relative grid h-9 w-9 place-items-center border border-line bg-panel text-ash transition-colors hover:text-fog cursor-pointer"
+        className="relative grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-ash transition-all hover:text-fog hover:bg-white/[0.07] hover:border-white/20 cursor-pointer"
         aria-label="الإشعارات"
       >
         <Bell className="h-4 w-4" />
         {unread > 0 && (
-          <span className="fnum absolute -top-1.5 -end-1.5 grid h-4 min-w-4 place-items-center bg-gold px-1 text-[9px] font-bold text-[#171307]">
+          <span className="fnum absolute -top-1 -end-1 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-gradient-to-r from-gold to-goldsoft px-1 text-[9.5px] font-black text-[#06070a] shadow-[0_0_10px_rgba(243,211,140,0.6)]">
             {unread}
           </span>
         )}
       </button>
       {bellOpen && (
-        <div className="absolute end-0 top-11 z-40 w-80 border border-line2 bg-panel shadow-2xl fadein">
-          <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
-            <span className="text-xs font-bold text-fog">الإشعارات</span>
+        <div className="absolute end-0 top-12 z-50 w-84 rounded-2xl border border-white/15 bg-[#0a0d16]/95 backdrop-blur-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] fadein overflow-hidden">
+          <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3 bg-white/[0.02]">
+            <span className="text-xs font-bold text-fog flex items-center gap-2">
+              <Sparkles className="h-3.5 w-3.5 text-gold" />
+              مركز الإشعارات
+            </span>
             {unread > 0 && (
               <button
-                className="text-[10px] text-gold hover:text-goldsoft cursor-pointer"
+                className="text-[10.5px] font-semibold text-gold hover:text-goldsoft cursor-pointer transition-colors"
                 onClick={async () => {
                   await markNotificationsRead();
                   router.refresh();
@@ -150,21 +169,23 @@ export default function Shell({
               </button>
             )}
           </div>
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-84 overflow-y-auto divide-y divide-white/[0.05]">
             {notifications.length === 0 && (
-              <div className="px-4 py-8 text-center text-[11px] text-dim">لا إشعارات بعد. ستصلك التنبيهات المهمة هنا.</div>
+              <div className="px-5 py-8 text-center text-xs text-dim">
+                لا توجد إشعارات حالياً. التنبيهات الذكية ستظهر هنا.
+              </div>
             )}
             {notifications.slice(0, 15).map((notif) => (
               <div
                 key={notif.id}
-                className={cn("border-b border-line/60 px-4 py-3", !notif.read && "bg-gold/[0.04]")}
+                className={cn("px-4 py-3.5 transition-colors hover:bg-white/[0.02]", !notif.read && "bg-gold/[0.05]")}
               >
                 <div className="flex items-center gap-2">
-                  {!notif.read && <span className="h-1.5 w-1.5 rounded-full bg-gold" />}
-                  <span className="text-[11.5px] font-bold text-fog">{notif.title}</span>
-                  <span className="ms-auto text-[9.5px] text-dim">{timeAgoAr(notif.createdAt)}</span>
+                  {!notif.read && <span className="h-2 w-2 rounded-full bg-gold shadow-[0_0_8px_#f3d38c]" />}
+                  <span className="text-[12px] font-bold text-fog">{notif.title}</span>
+                  <span className="ms-auto text-[10px] text-dim">{timeAgoAr(notif.createdAt)}</span>
                 </div>
-                {notif.body && <div className="mt-1 text-[10.5px] leading-4 text-ash">{notif.body}</div>}
+                {notif.body && <div className="mt-1 text-[11px] leading-5 text-ash">{notif.body}</div>}
               </div>
             ))}
           </div>
@@ -174,122 +195,153 @@ export default function Shell({
   );
 
   return (
-    <div className="vignette flex min-h-screen">
+    <div className="vignette flex min-h-screen text-fog">
       {/* desktop sidebar */}
       <aside
         className={cn(
-          "sticky top-0 hidden h-screen shrink-0 flex-col border-e border-line bg-coal/80 backdrop-blur transition-[width] duration-300 lg:flex",
-          collapsed ? "w-[64px]" : "w-[232px]"
+          "sticky top-0 hidden h-screen shrink-0 flex-col border-e border-white/[0.07] bg-[#07090f]/90 backdrop-blur-2xl transition-[width] duration-300 lg:flex z-30",
+          collapsed ? "w-[72px]" : "w-[245px]"
         )}
       >
-        <div className={cn("flex items-center border-b border-line px-4 py-4", collapsed && "justify-center px-2")}>
+        <div className={cn("flex items-center border-b border-white/[0.07] px-5 py-4.5", collapsed && "justify-center px-2")}>
           <Wordmark collapsed={collapsed} />
         </div>
-        <div className="flex-1 overflow-y-auto py-3">{navList(collapsed)}</div>
-        <div className="border-t border-line p-2">
+        <div className="flex-1 overflow-y-auto py-3.5">{navList(collapsed)}</div>
+        <div className="border-t border-white/[0.07] p-3">
           {!collapsed && (
-            <div className="mb-2 px-3 py-2">
-              <div className="truncate text-[11px] font-bold text-fog">{businessName || userName}</div>
-              <div className="mt-0.5 text-[9.5px] tracking-wide text-dim">stop planning. start building.</div>
+            <div className="mb-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] animate-pulse" />
+                <span className="truncate text-[11.5px] font-bold text-fog">{businessName || userName}</span>
+              </div>
+              <div className="mt-1 text-[10px] text-dim flex items-center justify-between">
+                <span>رائد أعمال حر</span>
+                <span className="text-gold font-semibold">متصل</span>
+              </div>
             </div>
           )}
-          <div className={cn("flex items-center gap-1", collapsed && "flex-col")}>
+          <div className={cn("flex items-center gap-1.5", collapsed && "flex-col")}>
             <button
               onClick={toggleCollapse}
-              className="grid h-8 flex-1 place-items-center border border-transparent text-dim transition-colors hover:bg-panel hover:text-fog cursor-pointer"
+              className="grid h-9 flex-1 place-items-center rounded-xl border border-white/5 text-dim transition-all hover:bg-white/[0.06] hover:text-fog cursor-pointer"
               aria-label="طي القائمة"
+              title={collapsed ? "توسيع" : "طي"}
             >
               {collapsed ? <PanelRightOpen className="h-4 w-4" /> : <PanelRightClose className="h-4 w-4" />}
             </button>
-            <form
-              action={async () => {
+            <button
+              onClick={async () => {
                 await signOut();
                 router.push("/login");
               }}
-              className={cn(collapsed ? "w-full" : "")}
+              className="grid h-9 w-9 place-items-center rounded-xl border border-white/5 text-dim transition-all hover:bg-brick/10 hover:border-brick/30 hover:text-brick cursor-pointer"
+              aria-label="تسجيل الخروج"
+              title="تسجيل الخروج"
             >
-              <button
-                type="submit"
-                className="grid h-8 w-full place-items-center border border-transparent px-2 text-dim transition-colors hover:bg-panel hover:text-brick cursor-pointer"
-                aria-label="تسجيل الخروج"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
-            </form>
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </aside>
 
+      {/* main content column */}
+      <div className="flex flex-1 flex-col min-w-0">
+        {/* top bar */}
+        <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b border-white/[0.07] bg-[#07090f]/80 px-4 md:px-8 backdrop-blur-2xl">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-ash hover:text-fog lg:hidden cursor-pointer"
+              aria-label="فتح القائمة"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+            {current && (
+              <div className="flex items-center gap-2">
+                <span className="text-dim hidden sm:inline text-xs">نظام التشغيل /</span>
+                <span className="font-ar text-sm md:text-base font-extrabold text-fog flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+                  {current.ar}
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <CommandPalette />
+            {bell}
+          </div>
+        </header>
+
+        {/* page container */}
+        <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto pb-24 lg:pb-12">
+          {children}
+        </main>
+      </div>
+
       {/* mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <button className="absolute inset-0 bg-black/70" onClick={() => setMobileOpen(false)} aria-label="اغلاق" />
-          <div className="absolute start-0 top-0 h-full w-72 border-e border-line bg-coal shadow-2xl slidein-r flex flex-col">
-            <div className="flex items-center justify-between border-b border-line px-4 py-4">
-              <Wordmark collapsed={false} />
-              <button onClick={() => setMobileOpen(false)} className="text-ash cursor-pointer">
-                <X className="h-5 w-5" />
+          <button
+            className="absolute inset-0 bg-black/80 backdrop-blur-md fadein"
+            onClick={() => setMobileOpen(false)}
+            aria-label="إغلاق القائمة"
+          />
+          <div className="absolute inset-y-0 start-0 w-72 border-e border-white/10 bg-[#07090f]/95 backdrop-blur-2xl p-4 shadow-2xl slidein-r flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+                <Wordmark collapsed={false} />
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="grid h-8 w-8 place-items-center rounded-lg border border-white/10 text-ash hover:text-fog cursor-pointer"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="py-4">{navList(false)}</div>
+            </div>
+            <div className="pt-4 border-t border-white/10">
+              <button
+                onClick={async () => {
+                  await signOut();
+                  router.push("/login");
+                }}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-brick/30 bg-brick/10 py-2.5 text-xs font-bold text-brick cursor-pointer"
+              >
+                <LogOut className="h-4 w-4" />
+                تسجيل الخروج
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto py-3">{navList(false)}</div>
           </div>
         </div>
       )}
 
-      {/* main */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-line bg-ink/85 px-4 backdrop-blur-md md:px-7">
-          <button
-            className="grid h-9 w-9 place-items-center border border-line bg-panel text-ash lg:hidden cursor-pointer"
-            onClick={() => setMobileOpen(true)}
-            aria-label="القائمة"
-          >
-            <Menu className="h-4 w-4" />
-          </button>
-          <div className="min-w-0">
-            <div className="fnum text-[8.5px] font-bold tracking-[0.3em] text-gold/80">{current?.en ?? "INDEPENDENT OS"}</div>
-            <div className="truncate text-[13px] font-bold text-fog">{current?.ar ?? "مركز القيادة"}</div>
-          </div>
-          <div className="ms-auto flex items-center gap-3">
-            <CommandPalette />
-            {bell}
-            <div className="hidden items-center gap-2 border border-line bg-panel px-3 py-1.5 sm:flex">
-              <span className="grid h-6 w-6 place-items-center bg-gold/15 text-[10px] font-black text-gold">
-                {(userName || "؟").slice(0, 1)}
-              </span>
-              <span className="max-w-28 truncate text-[11px] font-semibold text-fog">{businessName || userName}</span>
-            </div>
-          </div>
-        </header>
+      {/* mobile bottom dock */}
+      <nav className="fixed inset-x-4 bottom-4 z-40 flex items-center justify-around rounded-2xl border border-white/15 bg-[#0a0d16]/90 p-2 backdrop-blur-2xl shadow-[0_15px_35px_rgba(0,0,0,0.7)] lg:hidden">
+        {MOBILE_MAIN.map((href) => {
+          const item = NAV.find((n) => n.href === href);
+          if (!item) return null;
+          const active = pathname.startsWith(href);
+          const Icon = item.icon;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "flex flex-col items-center gap-1 rounded-xl p-2 text-[10px] font-bold transition-all",
+                active
+                  ? "bg-gradient-to-r from-gold/20 to-gold/5 text-gold border border-gold/30 shadow-[0_0_12px_rgba(243,211,140,0.2)]"
+                  : "text-slate-400 hover:text-white"
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              <span>{item.ar.split(" ")[0]}</span>
+            </Link>
+          );
+        })}
+      </nav>
 
-        <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 pb-24 pt-6 md:px-7 md:pt-8 lg:pb-10">
-          {children}
-        </main>
-
-        <FloatingActionPod onPrimaryAction={() => router.push("/mission")} />
-
-        {/* mobile bottom nav */}
-        <nav className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t border-line bg-coal/95 px-2 py-2 backdrop-blur lg:hidden">
-          {MOBILE_MAIN.map((href) => {
-            const item = NAV.find((x) => x.href === href)!;
-            const active = pathname.startsWith(item.href);
-            const Icon = item.icon;
-            return (
-              <Link key={href} href={href} className={cn("flex flex-col items-center gap-1 px-2 py-1", active ? "text-gold" : "text-dim")}>
-                <Icon className="h-[18px] w-[18px]" />
-                <span className="text-[8.5px] font-semibold">{item.ar}</span>
-              </Link>
-            );
-          })}
-          <button
-            onClick={() => setMobileOpen(true)}
-            className={cn("flex flex-col items-center gap-1 px-2 py-1", mobileOpen ? "text-gold" : "text-dim")}
-          >
-            <Menu className="h-[18px] w-[18px]" />
-            <span className="text-[8.5px] font-semibold">المزيد</span>
-          </button>
-        </nav>
-      </div>
+      {/* floating action trigger for mission */}
+      <FloatingActionPod />
     </div>
   );
 }
