@@ -6,6 +6,7 @@ import { getOverdueFollowups, getSnapshot } from "@/lib/metrics";
 import { ensureTodayMission } from "@/lib/missions";
 import { fmtUsd, fmtDateShort, timeAgoAr } from "@/lib/utils";
 import { Badge, GoalRing, Kicker, Panel, Stat } from "@/components/ui";
+import { SpotlightCard } from "@/components/motion-ui";
 import { LinkCard, StartMissionButton, WeeklyBars } from "@/components/dashboard-client";
 import { TaskList } from "@/components/tasks-client";
 import {
@@ -70,11 +71,11 @@ export default async function DashboardPage() {
 
       {/* goal + revenue */}
       <section className="rise rise-1 grid gap-4 lg:grid-cols-5">
-        <Panel className="relative overflow-hidden p-6 lg:col-span-2">
+        <SpotlightCard className="p-6 lg:col-span-2">
           <div className="flex items-start justify-between">
             <div>
               <Kicker>FINANCIAL MILESTONE</Kicker>
-              <div className="mt-3 text-[11px] font-semibold text-ash">الهدف: إيراد محصّل فعليًا</div>
+              <div className="mt-3 text-[11px] font-semibold text-ash">الهدف: إيراد محصّل فعلياً</div>
             </div>
             <Wallet className="h-4 w-4 text-dim" />
           </div>
@@ -99,14 +100,14 @@ export default async function DashboardPage() {
           </div>
           <div className="mt-4">
             <WeeklyBars data={snap.payments7} />
-            <div className="mt-1.5 text-center text-[9px] text-dim">الإيراد المحصّل يوميًا — من بيانات الدفعات الفعلية فقط</div>
+            <div className="mt-1.5 text-center text-[9px] text-dim">الإيراد المحصّل يومياً — من بيانات الدفعات الفعلية فقط</div>
           </div>
-        </Panel>
+        </SpotlightCard>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:col-span-3">
-          <Stat label="الإيراد المحصّل" value={fmtUsd(snap.revenue.collected)} icon={<Wallet className="h-3.5 w-3.5" />} accent="#7fae8e" hint="مقبوض فعليًا" />
-          <Stat label="مستحقات غير محصّلة" value={fmtUsd(snap.revenue.outstanding)} icon={<Flame className="h-3.5 w-3.5" />} accent="#c9974b" hint="متعاقَد/مفوتر ولم يُقبض" />
-          <Stat label="إيراد معروض (عروض)" value={fmtUsd(snap.revenue.quoted + snap.revenue.negotiating)} icon={<FileText className="h-3.5 w-3.5" />} hint="ليس إيرادًا بعد" />
+          <Stat label="الإيراد المحصّل" value={fmtUsd(snap.revenue.collected)} icon={<Wallet className="h-3.5 w-3.5" />} accent="#7fae8e" hint="مقبوض فعلياً" />
+          <Stat label="مستحقات غير محصلة" value={fmtUsd(snap.revenue.outstanding)} icon={<Flame className="h-3.5 w-3.5" />} accent="#c9974b" hint="متعاقَد/مفوتر ولم يُقبض" />
+          <Stat label="إيراد معروض (عروض)" value={fmtUsd(snap.revenue.quoted + snap.revenue.negotiating)} icon={<FileText className="h-3.5 w-3.5" />} hint="ليس إيراداً بعد" />
           <Stat label="عملاء فعليون" value={String(snap.counts.activeClients)} icon={<Users className="h-3.5 w-3.5" />} hint="صفقة مكتسبة" />
           <Stat label="عملاء مؤهلون" value={String(snap.counts.qualified)} icon={<Target className="h-3.5 w-3.5" />} hint={`من أصل ${snap.counts.businesses} جهة`} />
           <Stat label="عروض معلّقة" value={String(snap.counts.proposalsSent)} icon={<FileText className="h-3.5 w-3.5" />} hint="بانتظار الرد" />
@@ -118,7 +119,7 @@ export default async function DashboardPage() {
 
       {/* next move */}
       <section className="rise rise-2">
-        <Panel className="relative overflow-hidden">
+        <SpotlightCard>
           <div className="absolute inset-y-0 start-0 w-1 bg-gold" />
           <div className="p-6 md:p-7">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -148,9 +149,9 @@ export default async function DashboardPage() {
                 )}
                 <div className="flex flex-wrap gap-2 text-[10px]">
                   <Badge tone="gold">
-                    <Flame className="h-3 w-3" /> النتيجة المتوقعة: {todayMission.mission.measurableResult || "تقدّم قابل للقياس"}
+                    <Flame className="h-3 w-3" /> النتيجة المتوقعة: {todayMission.mission.measurableResult || "تقدم قابل للقياس"}
                   </Badge>
-                  {primaryTask && <Badge>⏱ {primaryTask.estMinutes} دقيقة تقريبًا</Badge>}
+                  {primaryTask && <Badge>⏱ {primaryTask.estMinutes} دقيقة تقريباً</Badge>}
                 </div>
               </div>
               <div className="flex items-end">
@@ -158,7 +159,7 @@ export default async function DashboardPage() {
               </div>
             </div>
           </div>
-        </Panel>
+        </SpotlightCard>
       </section>
 
       {/* tasks + activity columns */}
@@ -204,7 +205,7 @@ export default async function DashboardPage() {
             <Panel className="p-1.5">
               {convs.length === 0 && (
                 <div className="px-3 py-6 text-center text-[11px] leading-5 text-dim">
-                  لا محادثات نشطة بعد. سجّل ردود العملاء هنا لتبقى الصورة دقيقة.
+                  لا محادثات نشطة بعد. سجل ردود العملاء هنا لتبقى الصورة دقيقة.
                 </div>
               )}
               {convs.map((c) => {
