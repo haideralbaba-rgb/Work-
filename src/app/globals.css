@@ -1,37 +1,40 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #090909;
-  --color-coal: #111111;
-  --color-panel: #171717;
-  --color-panel2: #1d1b17;
-  --color-raised: #1c1c1c;
-  --color-line: #292929;
-  --color-line2: #3a3a3a;
-  --color-fog: #f5f5f5;
-  --color-ash: #999999;
-  --color-dim: #636363;
-  --color-gold: #c7a56a;
-  --color-goldsoft: #dcc391;
-  --color-golddeep: #8a7346;
-  --color-sage: #7fae8e;
-  --color-sagedeep: #41604d;
-  --color-amber: #c9974b;
-  --color-brick: #c06a55;
-  --color-brickdeep: #5c3128;
+  --color-ink: #06070a;
+  --color-coal: #0b0e14;
+  --color-panel: #101522;
+  --color-panel2: #161c2c;
+  --color-raised: #1c2438;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line2: rgba(255, 255, 255, 0.16);
+  --color-fog: #f8fafc;
+  --color-ash: #94a3b8;
+  --color-dim: #64748b;
+  --color-gold: #f3d38c;
+  --color-goldsoft: #fae4b5;
+  --color-golddeep: #c59b48;
+  --color-sage: #34d399;
+  --color-sagedeep: #059669;
+  --color-amber: #fbbf24;
+  --color-brick: #f43f5e;
+  --color-brickdeep: #be123c;
+  --color-azure: #38bdf8;
+  --color-indigo: #818cf8;
 }
 
 html {
-  background: #090909;
+  background: #06070a;
   color-scheme: dark;
 }
 
 body {
-  background: #090909;
-  color: #f5f5f5;
+  background: #06070a;
+  color: #f8fafc;
   font-family: var(--font-inter), var(--font-cairo), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 .font-ar {
@@ -45,20 +48,24 @@ body {
 }
 
 ::selection {
-  background: rgba(199, 165, 106, 0.28);
-  color: #f5f5f5;
+  background: rgba(243, 211, 140, 0.28);
+  color: #ffffff;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2e2e2e transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
 }
 *::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #2e2e2e;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
 }
 *::-webkit-scrollbar-track {
   background: transparent;
@@ -85,7 +92,7 @@ body {
 @keyframes slidein-r {
   from {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateX(-24px);
   }
   to {
     opacity: 1;
@@ -100,13 +107,20 @@ body {
     background-position: -200% 0;
   }
 }
-@keyframes pulse-gold {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(199, 165, 106, 0.25);
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(243, 211, 140, 0.35);
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(199, 165, 106, 0);
+    box-shadow: 0 0 30px rgba(243, 211, 140, 0.7);
+  }
+}
+@keyframes pulse-green {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
   }
 }
 
@@ -135,22 +149,43 @@ body {
   animation: slidein-r 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Atmospheric backgrounds */
 .vignette {
   background:
-    radial-gradient(1200px 500px at 85% -10%, rgba(199, 165, 106, 0.07), transparent 60%),
-    radial-gradient(900px 500px at 0% 110%, rgba(199, 165, 106, 0.045), transparent 55%),
-    #090909;
+    radial-gradient(1200px 600px at 85% -10%, rgba(243, 211, 140, 0.08), transparent 60%),
+    radial-gradient(1000px 600px at 0% 100%, rgba(56, 189, 248, 0.06), transparent 55%),
+    radial-gradient(800px 500px at 50% 50%, rgba(129, 140, 248, 0.04), transparent 60%),
+    #06070a;
+}
+
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 .hairline-t {
-  border-top: 1px solid #292929;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 .kicker {
   font-family: var(--font-inter), sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.32em;
+  font-size: 10.5px;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #c7a56a;
+  color: #f3d38c;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.kicker::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #f3d38c;
+  box-shadow: 0 0 8px #f3d38c;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -167,7 +202,7 @@ input[type="date"] {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #141414 25%, #1d1d1d 50%, #141414 75%);
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.6s infinite linear;
 }
